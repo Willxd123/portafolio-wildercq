@@ -1,0 +1,83 @@
+<nav
+  class="backdrop-blur-lg dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b dark:border-gray-600"
+>
+  <div
+    class="max-w-screen-xl flex flex-wrap items-center justify-between md:justify-around mx-auto p-7 2xl:p-14"
+  >
+    <div class="flex items-center space-x-3 rtl:space-x-reverse">
+      <img src="assets/logo.png" class="h-8" alt="" />
+      <span
+        class="self-center text-2xl 2xl:text-4xl font-semibold whitespace-nowrap dark:text-white"
+        >Wilder</span
+      >
+    </div>
+    <div
+      class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse text-2xl 2xl:text-4xl"
+    >
+      <button
+        data-collapse-toggle="navbar-sticky"
+        type="button"
+        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        aria-controls="navbar-sticky"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Open main menu</span>
+        <svg
+          class="w-5 h-5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 17 14"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M1 1h15M1 7h15M1 13h15"
+          />
+        </svg>
+      </button>
+    </div>
+    <div
+      class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+      id="navbar-sticky"
+    >
+      <ul
+        class="flex flex-col p-4 md:p-0 mt-4 font-medium border rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0"
+      >
+        <li *ngFor="let item of menuItems" class="navbar-item">
+          <a
+            href="#{{ item.toLowerCase() }}"
+            class="block py-2 px-3 text-gray-900 rounded-sm md:p-0 md:text-xl lg:text-2xl 2xl:text-4xl transform transition-transform duration-300 hover:scale-105"
+          >
+            {{ item }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- <div class="block sm:hidden">
+  <div
+    class=" fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-black/30  border border-gray-200 backdrop-blur-sm rounded-full bottom-4 left-1/2 ">
+    <div class="grid h-full max-w-lg grid-cols-5 mx-auto">
+      <button data-tooltip-target="tooltip-home" type="button"
+        class="inline-flex flex-col items-center justify-center px-5 rounded-s-full  group">
+        <svg
+          class="w-5 h-5 mb-1 text-gray-700 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+          aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+        </svg>
+        <span class="sr-only">Home</span>
+      </button>
+      <div id="tooltip-home" role="tooltip"
+        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+        Home
+        <div class="tooltip-arrow" data-popper-arrow></div>
+      </div>
+    </div>
+  </div>
+</div> -->
