@@ -1,17 +1,16 @@
-
-<div class="min-h-screen ">
-  <div class="mb-32 2xl:mb-48">
-    <app-navbar/>
-  </div>
-
-  <div class="p-4 xl:mx-10 -mt-24 ">
-
-    <div class="mt-1 ">
+<div class="min-h-screen bg-gradient-to-b from-blue-gray-50 to-blue-gray-100/50">
+  <!-- Navbar -->
+  <app-navbar />
+  
+  <!-- Main Content Container -->
+  <main class="relative">
+    <!-- Content Wrapper -->
+    <div class="max-w-full mx-auto">
       <app-welcome/>
       <router-outlet></router-outlet>
     </div>
-    <div class="text-blue-gray-600">
-      <app-footer></app-footer>
-    </div>
-  </div>
+  </main>
+  
+  <!-- Footer -->
+  <app-footer></app-footer>
 </div>
