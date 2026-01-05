@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FooterComponent } from '../footer/footer.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { RouterOutlet } from '@angular/router';
@@ -12,5 +12,6 @@ import { WelcomeComponent } from '../welcome/welcome.component';
   styleUrl: './layout.component.css'
 })
 export default class LayoutComponent {
+  @ViewChild(WelcomeComponent) welcomeComponent!: WelcomeComponent;
 
 }

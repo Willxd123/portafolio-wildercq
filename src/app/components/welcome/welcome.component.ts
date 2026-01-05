@@ -13,7 +13,14 @@ import {
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
-
+interface Experience {
+  company: string;
+  role: string;
+  period: string;
+  description?: string;
+  responsibilities: string[];
+  side: 'left' | 'right'; // Para forzar el lado visualmente si quisieras, o lo calculamos automático
+}
 @Component({
   selector: 'app-welcome',
   standalone: true,
@@ -32,7 +39,7 @@ export class WelcomeComponent implements AfterViewInit, OnDestroy {
   private camera!: THREE.PerspectiveCamera;
   private renderer!: THREE.WebGLRenderer;
   private controls!: OrbitControls;
-  private head: THREE.Object3D | null = null; // Variable para almacenar la cabeza
+  public  head: THREE.Object3D | null = null; // Variable para almacenar la cabeza
   private videoTexture!: THREE.VideoTexture;
   private video!: HTMLVideoElement;
   @ViewChild('sceneContainer', { static: true }) sceneContainer!: ElementRef;
@@ -128,7 +135,7 @@ export class WelcomeComponent implements AfterViewInit, OnDestroy {
   }
   // Manejar el movimiento del mouse
   @HostListener('document:mousemove', ['$event'])
-  private onMouseMove(event: MouseEvent) {
+  public onMouseMove(event: MouseEvent): void {
     if (!this.head) return; // Si no hay cabeza, no hacer nada
 
     // Normalizar la posición del mouse en valores entre -1 y 1
@@ -189,4 +196,43 @@ export class WelcomeComponent implements AfterViewInit, OnDestroy {
       }
     });
   }
+
+  experiences: Experience[] = [
+    {
+      company: 'DTIC - UAGRM',
+      role: 'Full Stack Developer',
+      period: 'Nov 2025 - Dic 2025',
+      description: 'Dirección de Tecnología de la Información y Comunicación',
+      responsibilities: [
+        'Refactorización y creación del nuevo portal web UAGRM dinámico.',
+        'Actualización de proyectos administrativos existentes.',
+        'Desarrollo de soluciones Full Stack adaptadas a necesidades institucionales.'
+      ],
+      side: 'left'
+    },
+    {
+      company: 'DEDTE - UAGRM',
+      role: 'Full Stack Developer',
+      period: 'Feb 2025 - Oct 2025',
+      description: 'Departamento de Educación a Distancia y Tecnología Educativa',
+      responsibilities: [
+        'Desarrollo de plugins personalizados para Moodle.',
+        'Creación de software para automatización de gestión administrativa.',
+        'Optimización del manejo de información mediante sistemas web.'
+      ],
+      side: 'right'
+    },
+    {
+      company: 'FICCT - UAGRM',
+      role: 'Consejero de Carrera',
+      period: 'Jul 2022 - Jul 2024',
+      description: 'Ingeniería Informática',
+      responsibilities: [
+        'Proponer contenido y modificaciones al plan operativo de la carrera.',
+        'Planificación de carga horaria de auxiliares y docentes.',
+        'Fiscalización y control del cumplimiento académico docente.'
+      ],
+      side: 'left'
+    }
+  ];
 }
