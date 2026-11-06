@@ -42,6 +42,7 @@ export class WelcomeComponent implements AfterViewInit, OnDestroy {
     if (!isPlatformBrowser(this.platformId)) return;
     cancelAnimationFrame(this.frameId);
     this.visibilidad?.disconnect();
+    this.controls?.dispose();
     this.renderer?.dispose();
   }
   ngAfterViewInit() {
@@ -125,6 +126,11 @@ export class WelcomeComponent implements AfterViewInit, OnDestroy {
     this.controls.enableDamping = false;
     this.controls.enableZoom = false;
     this.controls.enableRotate = false;
+    this.controls.enablePan = false;
+    // El avatar sigue el mouse desde onMouseMove; no necesita capturar gestos.
+    this.controls.enabled = false;
+    // OrbitControls asigna touch-action:none al canvas al crearse.
+    this.renderer.domElement.style.touchAction = 'pan-y pinch-zoom';
     this.controls.mouseButtons.RIGHT = null as any;
   }
 
