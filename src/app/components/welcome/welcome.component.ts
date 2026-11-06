@@ -9,9 +9,9 @@ import {
   PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import * as THREE from 'three';
+// Three.js y sus helpers se descargan bajo demanda (import dinámico): solo tipos aquí.
+import type * as THREE from 'three';
+import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { experiences, projects, skillGroups } from './profile.data';
 import { additionalSkills } from './skill-icons.data';
 @Component({
@@ -31,22 +31,54 @@ export class WelcomeComponent implements AfterViewInit, OnDestroy {
   private video!: HTMLVideoElement;
   @ViewChild('sceneContainer', { static: true }) sceneContainer!: ElementRef;
   constructor(@Inject(PLATFORM_ID) private platformId: object) {}
+  private THREE!: typeof import('three');
+  private frameId = 0;
+  private escenaVisible = false;
+  private destruido = false;
+  private visibilidad?: IntersectionObserver;
+
   ngOnDestroy() {
-    if (isPlatformBrowser(this.platformId)) {
-      window.removeEventListener('resize', this.onResize.bind(this));
-      window.removeEventListener('mousemove', this.onMouseMove.bind(this));
-    }
+    this.destruido = true;
+    if (!isPlatformBrowser(this.platformId)) return;
+    cancelAnimationFrame(this.frameId);
+    this.visibilidad?.disconnect();
+    this.renderer?.dispose();
   }
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
-      this.initScene();
-      this.loadModel();
-      this.animate();
-      // Agregar el listener para el evento resize
-      window.addEventListener('resize', this.onResize.bind(this));
-      window.addEventListener('mousemove', this.onMouseMove.bind(this)); // Agregar evento de mouse
       this.observeSections();
+      // El resto de la página pinta primero; el 3D carga cuando el navegador está libre.
+      const iniciar = () => this.iniciarEscena3D();
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(iniciar, { timeout: 2000 });
+      } else {
+        setTimeout(iniciar, 500);
+      }
     }
+  }
+
+  private async iniciarEscena3D() {
+    if (this.destruido) return;
+    // Descarga diferida de three (~700 KB) y sus helpers, en paralelo.
+    const [THREE, { OrbitControls }, { GLTFLoader }] = await Promise.all([
+      import('three'),
+      import('three/examples/jsm/controls/OrbitControls'),
+      import('three/examples/jsm/loaders/GLTFLoader'),
+    ]);
+    if (this.destruido) return;
+    this.THREE = THREE;
+    this.initScene(OrbitControls);
+    this.loadModel(GLTFLoader);
+
+    // Solo se renderiza mientras la escena está en pantalla y la pestaña visible.
+    this.visibilidad = new IntersectionObserver(([entrada]) => {
+      this.escenaVisible = entrada.isIntersecting;
+      if (this.escenaVisible) this.animate();
+    });
+    this.visibilidad.observe(this.sceneContainer.nativeElement);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && this.escenaVisible) this.animate();
+    });
   }
   /*   options: AnimationOptions = {
     path: 'assets/scroll.json', // Ruta del archivo JSON
@@ -60,7 +92,8 @@ export class WelcomeComponent implements AfterViewInit, OnDestroy {
     animation.setSpeed(1.5); // Reduce la velocidad al 70% de la normal
   } */
 
-  private initScene() {
+  private initScene(OrbitControlsCtor: typeof OrbitControls) {
+    const THREE = this.THREE;
     this.scene = new THREE.Scene();
 
     const width = this.sceneContainer.nativeElement.offsetWidth;
@@ -88,15 +121,15 @@ export class WelcomeComponent implements AfterViewInit, OnDestroy {
     directionalLight.position.set(1, 2, 5);
     this.scene.add(directionalLight);
 
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls = new OrbitControlsCtor(this.camera, this.renderer.domElement);
     this.controls.enableDamping = false;
     this.controls.enableZoom = false;
     this.controls.enableRotate = false;
     this.controls.mouseButtons.RIGHT = null as any;
   }
 
-  private loadModel() {
-    const loader = new GLTFLoader();
+  private loadModel(GLTFLoaderCtor: typeof import('three/examples/jsm/loaders/GLTFLoader').GLTFLoader) {
+    const loader = new GLTFLoaderCtor();
     loader.load(
       'assets/will10.glb',
       (gltf) => {
@@ -149,6 +182,7 @@ export class WelcomeComponent implements AfterViewInit, OnDestroy {
   }
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
+    if (!this.renderer) return;
     const width = this.sceneContainer.nativeElement.clientWidth;
     const height = this.sceneContainer.nativeElement.clientHeight;
     this.renderer.setSize(width, height);
@@ -157,7 +191,9 @@ export class WelcomeComponent implements AfterViewInit, OnDestroy {
   }
 
   private animate() {
-    requestAnimationFrame(() => this.animate());
+    cancelAnimationFrame(this.frameId);
+    if (this.destruido || !this.escenaVisible || document.hidden) return;
+    this.frameId = requestAnimationFrame(() => this.animate());
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
   }

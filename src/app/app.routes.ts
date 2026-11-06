@@ -1,11 +1,10 @@
 import { Routes } from '@angular/router';
-import { Component } from '@angular/core';
-import LayoutComponent from './components/layout/layout.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component:LayoutComponent,
-    children:[]
+    // Carga diferida: el layout (y todo lo que importa) va en su propio chunk.
+    loadComponent: () => import('./components/layout/layout.component'),
+    children: []
   }
 ];
