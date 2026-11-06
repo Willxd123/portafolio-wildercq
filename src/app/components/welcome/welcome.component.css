@@ -76,7 +76,8 @@
 
 /* Secciones con padding mejorado */
 section {
-  scroll-margin-top: 80px;
+  /* The fixed navigation offset is defined once in global scroll-padding. */
+  scroll-margin-top: 0;
 }
 
 /* Responsive adjustments para el contenedor 3D */

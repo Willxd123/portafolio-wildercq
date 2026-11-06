@@ -15,5 +15,31 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 50px;
+  /* Fixed navigation: 64px content + 1px bottom border. */
+  scroll-padding-top: 65px;
+}
+
+/* La interfaz de idioma la controla nuestro navbar, no la barra del widget. */
+body > .skiptranslate,
+.goog-te-banner-frame,
+iframe.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.goog-te-balloon-frame,
+#goog-gt-tt {
+  display: none !important;
+}
+
+/* Google aplica un desplazamiento inline al traducir; mantener el navbar arriba. */
+body {
+  top: 0 !important;
+}
+
+/* Ocultar el indicador de traducción desde su inserción, sin esperar eventos. */
+.goog-te-spinner-pos,
+.goog-te-spinner,
+.VIpgJd-ZVi9od-aZ2wEe,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }

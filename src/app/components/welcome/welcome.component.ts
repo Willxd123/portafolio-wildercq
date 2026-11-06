@@ -7,32 +7,19 @@ import {
   Inject,
   OnDestroy,
   PLATFORM_ID,
-  signal,
   ViewChild,
 } from '@angular/core';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
-interface Experience {
-  company: string;
-  role: string;
-  period: string;
-  description?: string;
-  responsibilities: string[];
-  side: 'left' | 'right'; // Para forzar el lado visualmente si quisieras, o lo calculamos automático
-}
+import { experiences, projects, skillGroups } from './profile.data';
+import { additionalSkills } from './skill-icons.data';
 @Component({
   selector: 'app-welcome',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './welcome.component.html',
   styleUrl: './welcome.component.css',
-  template: `
-    <ng-lottie
-      [options]="options"
-      (animationCreated)="animationCreated($event)"
-    />
-  `,
 })
 export class WelcomeComponent implements AfterViewInit, OnDestroy {
   private scene!: THREE.Scene;
@@ -197,42 +184,11 @@ export class WelcomeComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  experiences: Experience[] = [
-    {
-      company: 'DTIC - UAGRM',
-      role: 'Full Stack Developer',
-      period: 'Nov 2025 - Dic 2025',
-      description: 'Dirección de Tecnología de la Información y Comunicación',
-      responsibilities: [
-        'Refactorización y creación del nuevo portal web UAGRM dinámico.',
-        'Actualización de proyectos administrativos existentes.',
-        'Desarrollo de soluciones Full Stack adaptadas a necesidades institucionales.'
-      ],
-      side: 'left'
-    },
-    {
-      company: 'DEDTE - UAGRM',
-      role: 'Full Stack Developer',
-      period: 'Feb 2025 - Oct 2025',
-      description: 'Departamento de Educación a Distancia y Tecnología Educativa',
-      responsibilities: [
-        'Desarrollo de plugins personalizados para Moodle.',
-        'Creación de software para automatización de gestión administrativa.',
-        'Optimización del manejo de información mediante sistemas web.'
-      ],
-      side: 'right'
-    },
-    {
-      company: 'FICCT - UAGRM',
-      role: 'Consejero de Carrera',
-      period: 'Jul 2022 - Jul 2024',
-      description: 'Ingeniería Informática',
-      responsibilities: [
-        'Proponer contenido y modificaciones al plan operativo de la carrera.',
-        'Planificación de carga horaria de auxiliares y docentes.',
-        'Fiscalización y control del cumplimiento académico docente.'
-      ],
-      side: 'left'
-    }
+  readonly experiences = experiences;
+  readonly projects = projects;
+  readonly skillGroups = skillGroups;
+  readonly additionalSkills = additionalSkills;
+  readonly additionalSkillCards = [
+    { title: 'Infraestructura y datos', icon: 'database', items: additionalSkills.infrastructure },
   ];
 }

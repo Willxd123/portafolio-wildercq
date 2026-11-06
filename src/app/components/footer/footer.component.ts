@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
 })
 export class FooterComponent {
   currentYear = new Date().getFullYear();
-  email = "wilder.c.q.16@gmail.com"; // Corregido según tu HTML anterior
+  email = "wilderc.q.16@gmail.com";
   phone = "+591 60937613";
   location = "Santa Cruz, Bolivia";
   

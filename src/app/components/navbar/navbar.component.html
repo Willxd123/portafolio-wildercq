@@ -14,22 +14,22 @@
               alt="Wilder Logo"
             />
             <div
-              class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-lg"
+              class="absolute inset-0 bg-blue-gray-300 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-lg"
             ></div>
           </div>
           <h1
-            class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
+            class="text-2xl font-bold text-blue-gray-100"
           >
             Wilder
           </h1>
         </div>
 
         <!-- Menú Desktop -->
-        <div class="hidden md:block"></div>
+        <div class="hidden lg:block"></div>
       </div>
 
       <!-- Botón adicional -->
-      <div class="hidden md:block">
+      <div class="hidden lg:block">
         <div class="ml-10 flex items-baseline space-x-4">
           <a
             *ngFor="let item of menuItems; let i = index"
@@ -43,7 +43,36 @@
       </div>
 
       <!-- Mobile menu button -->
-      <div class="md:hidden">
+      <div class="relative notranslate" translate="no" data-language-menu>
+        <button
+          type="button"
+          (click)="toggleLanguageMenu()"
+          class="flex items-center gap-1.5 px-2 h-8 rounded hover:bg-white/10 transition-colors text-blue-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-gray-300"
+          aria-label="Seleccionar idioma / Select language"
+          aria-controls="language-selector"
+          [attr.aria-expanded]="languageMenuOpen"
+        >
+          <ng-lottie
+            [options]="lottieOptions"
+            (animationCreated)="animationCreated($event)"
+            class="w-5 h-5 lg:w-4 lg:h-4 xl:w-6 xl:h-6 shrink-0 block"
+            width="100%"
+            height="100%"
+          ></ng-lottie>
+          <span class="px-1.5 py-0.5 rounded bg-blue-gray-700 text-white text-[10px] lg:text-[8px] xl:text-[10px] font-bold uppercase tracking-wider">{{ idioma.idiomaActual() }}</span>
+        </button>
+        <div id="language-selector" [class.hidden]="!languageMenuOpen" class="absolute right-0 top-full mt-3 w-60 p-2 rounded-xl bg-blue-gray-900 border border-blue-gray-600 shadow-xl text-blue-gray-100">
+          <p class="px-3 py-2 text-xs text-blue-gray-300">Idioma / Language</p>
+          @for (opcion of idioma.idiomas; track opcion.codigo) {
+            <button type="button" (click)="seleccionarIdioma(opcion.codigo)" [attr.lang]="opcion.codigo" [attr.aria-pressed]="idioma.idiomaActual() === opcion.codigo" [class.bg-blue-gray-700]="idioma.idiomaActual() === opcion.codigo" class="w-full rounded-lg px-3 py-2 text-left hover:bg-blue-gray-700 focus-visible:bg-blue-gray-700 flex justify-between gap-3">
+              <span>{{ opcion.label }}</span><span class="text-xs uppercase">{{ opcion.codigo }}</span>
+            </button>
+          }
+          <div id="google_translate_element" class="hidden" aria-hidden="true"></div>
+          @if (translationError) { <p role="status" class="px-3 py-2 text-xs text-blue-gray-200">No se pudo cargar el traductor. Comprueba tu conexión y recarga la página.</p> }
+        </div>
+      </div>
+      <div class="lg:hidden">
         <button
           (click)="toggleMobileMenu()"
           type="button"
@@ -72,7 +101,7 @@
   </div>
 
   <!-- Mobile menu -->
-  <div [class.hidden]="!mobileMenuOpen" class="md:hidden">
+  <div id="navbar-mobile" [class.hidden]="!mobileMenuOpen" class="lg:hidden">
     <div class="px-2 pt-2 pb-3 space-y-1 bg-blue-gray-900">
       <a
         *ngFor="let item of menuItems; let i = index"

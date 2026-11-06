@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideLottieOptions } from 'ngx-lottie';
 
 
 
@@ -11,6 +12,7 @@ export const appConfig: ApplicationConfig = {
     { eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(),
+    provideLottieOptions({ player: () => import('lottie-web') }),
     provideHttpClient(
       withFetch(), //global
 
